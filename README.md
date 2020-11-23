@@ -3,18 +3,18 @@
 
 <!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
 
-<p>
+<a>
     <img 
         align="left"
         src="https://github-readme-stats.vercel.app/api?username=tomplum&show_icons=true&locale=en&hide=prs,contribs&include_all_commits=true&count_private=true&custom_title=Tom's GitHub Stats"
         alt="tomplum" 
     />
-</p>
+</a>
 
-<p>
+<a>
     <img 
         align="left"
         src="https://github-readme-stats.vercel.app/api/top-langs?username=tomplum&show_icons=true&locale=en&layout=compact&langs_count=6"
         alt="tomplum" 
     />
-</p>
+</a>

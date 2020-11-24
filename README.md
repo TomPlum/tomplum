@@ -5,7 +5,7 @@
 
 🔭 I’m currently working on [Advent of Code 2019](https://github.com/TomPlum/advent-of-code-2019) to learn Kotlin.
 
-🌱 I’m also working on [Activity Trends](https://github.com/TomPlum/activity-trends) to learn front-end development.
+🏃 I’m also working on [Activity Trends](https://github.com/TomPlum/activity-trends) to learn front-end development.
 
 📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
 
@@ -16,7 +16,7 @@
         alt="tomplum" 
     />
 </a>
-
++
 <a>
     <img 
         align="left"

@@ -5,22 +5,22 @@
 
 🔭 I’m currently working on [Advent of Code 2019](https://github.com/TomPlum/advent-of-code-2019) to learn Kotlin.
 
-🏃 I’m also working on [Activity Trends](https://github.com/TomPlum/activity-trends) to learn front-end development.
+🏃 I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development.
 
 📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
 
 <a>
     <img 
         align="left"
-        src="https://github-readme-stats.vercel.app/api?username=tomplum&show_icons=true&locale=en&hide=prs,contribs&include_all_commits=true&count_private=true&custom_title=Tom's GitHub Stats&card_width=300"
+        src="https://github-readme-stats.vercel.app/api?username=tomplum&show_icons=true&theme=dark&locale=en&hide=prs,contribs&include_all_commits=true&count_private=true&custom_title=Tom's GitHub Stats&card_width=300"
         alt="tomplum" 
     />
 </a>
-+
-<a>
+
+<!--<a>
     <img 
         align="left"
-        src="https://github-readme-stats.vercel.app/api/top-langs?username=tomplum&show_icons=true&locale=en&layout=compact&langs_count=6"
+        src="https://github-readme-stats.vercel.app/api/top-langs?username=tomplum&theme=dark&show_icons=true&locale=en&layout=compact&langs_count=6"
         alt="tomplum" 
     />
-</a>
+</a>-->

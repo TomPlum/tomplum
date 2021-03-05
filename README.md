@@ -5,7 +5,7 @@
 
 🔭 I’m currently working on [Advent of Code 2019](https://github.com/TomPlum/advent-of-code-2019) to learn Kotlin.
 
-:red_circle: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development.
+:jp: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development.
 
 📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
 

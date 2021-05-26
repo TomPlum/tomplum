@@ -3,9 +3,9 @@
 
 <!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
 
-🔭 I’m currently working on [Advent of Code 2019](https://github.com/TomPlum/advent-of-code-2019) to learn Kotlin.
+🔭 I’m currently working on [Advent of Code 2020](https://github.com/TomPlum/advent-of-code-2020) to learn Kotlin.
 
-:jp: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development.
+:jp: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development (and Japanese!).
 
 📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
 

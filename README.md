@@ -3,7 +3,7 @@
 
 <!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
 
-🔭 I’m currently working on [Advent of Code 2020](https://github.com/TomPlum/advent-of-code-2020) to learn Kotlin.
+🔭 I’m currently working on [Advent of Code 2021](https://github.com/TomPlum/advent-of-code-2021) in Kotlin.
 
 :jp: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development (and Japanese!).
 

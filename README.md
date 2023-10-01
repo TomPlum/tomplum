@@ -5,17 +5,17 @@
 
 🔭 I’m currently working on [Advent of Code 2022](https://github.com/TomPlum/advent-of-code-2022) in Kotlin.
 
-:jp: I’m also working on [Learn Japanese](https://github.com/TomPlum/learn-japanese) to practice front-end development (and Japanese!).
+:jp: I’m also working on [Nyusu](https://github.com/TomPlum/nyuusu), a small personal project for practing your Japanese reading skills via news articles and headlines.
 
 📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
 
-<a>
+<!--<a>
     <img 
         align="left"
         src="https://github-readme-stats.vercel.app/api?username=tomplum&show_icons=true&theme=dark&locale=en&hide=prs,contribs&include_all_commits=true&count_private=true&custom_title=Tom's GitHub Stats&card_width=300"
         alt="tomplum" 
     />
-</a>
+</a> -->
 
 <!--<a>
     <img 

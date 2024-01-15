@@ -3,7 +3,7 @@
 
 <!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
 
-🔭 I’m currently working on [Advent of Code 2022](https://github.com/TomPlum/advent-of-code-2022) in Kotlin.
+🔭 I’m currently working on [Advent of Code 2023](https://github.com/TomPlum/advent-of-code-2023) in Kotlin.
 
 :jp: I’m also working on [Nyusu](https://github.com/TomPlum/nyuusu), a small personal project for practing your Japanese reading skills via news articles and headlines.
 

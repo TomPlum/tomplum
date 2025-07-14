@@ -3,7 +3,7 @@
 
 <!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
 
-🔭 I’m currently working on [Advent of Code 2023](https://github.com/TomPlum/advent-of-code-2023) in Kotlin.
+🔭 I’m currently working on [react-git-log](https://github.com/TomPlum/react-git-log), a flexible, themable and paginated React component for visualising Git commit history and metadata.
 
 :jp: I’m also working on [Nyusu](https://github.com/TomPlum/nyuusu), a small personal project for practing your Japanese reading skills via news articles and headlines.
 

@@ -11,9 +11,15 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = join(root, "assets", "cards");
 const config = JSON.parse(await readFile(join(root, "profile.config.json"), "utf8"));
 
+let mascotUri = "";
+try {
+  const buf = await readFile(join(root, "assets", "mascot.png"));
+  mascotUri = `data:image/png;base64,${buf.toString("base64")}`;
+} catch { /* mascot optional */ }
+
 const MODES = {
-  light: { cardBg: "#ffffff", surface: "#f6f8fa", border: "#d0d7de", text: "#1f2328", sub: "#656d76", faint: "#8b949e" },
-  dark: { cardBg: "#0d1117", surface: "#161b22", border: "#30363d", text: "#e6edf3", sub: "#9198a1", faint: "#6e7681" },
+  light: { cardBg: "#ffffff", surface: "#f6f8fa", border: "#d0d7de", text: "#1f2328", sub: "#656d76", faint: "#8b949e", link: "#0969da" },
+  dark: { cardBg: "#0d1117", surface: "#161b22", border: "#30363d", text: "#e6edf3", sub: "#9198a1", faint: "#6e7681", link: "#2f81f7" },
 };
 
 const THEMES = {
@@ -29,6 +35,9 @@ const LANG_COLORS = {
   TypeScript: "#3178c6", Kotlin: "#a97bff", Java: "#b07219", JavaScript: "#f1e05a",
   Python: "#3572A5", Swift: "#F05138", Shell: "#89e051", CSS: "#563d7c", HTML: "#e34c26",
 };
+const CLAUDE = "#D97757";
+const SANS = "-apple-system,'Segoe UI',sans-serif";
+const MONO = "ui-monospace, monospace";
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const approxWidth = (text, size) => [...String(text)].reduce((w, ch) => w + (ch.charCodeAt(0) > 0x2000 ? size : size * 0.56), 0);
@@ -41,9 +50,7 @@ async function fetchRepos(user) {
   const res = await fetch(`https://api.github.com/users/${user}/repos?per_page=100&type=owner&sort=updated`, { headers });
   if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
   const map = new Map();
-  for (const r of await res.json()) {
-    map.set(r.name, { stars: r.stargazers_count, lang: r.language, url: r.html_url, fork: r.fork });
-  }
+  for (const r of await res.json()) map.set(r.name, { stars: r.stargazers_count, lang: r.language, url: r.html_url, fork: r.fork });
   return map;
 }
 
@@ -70,10 +77,11 @@ const stats = (() => {
 })();
 
 // ---- SVG building blocks --------------------------------------------------
-function frame(m, w, h, opts = {}) {
-  const fill = opts.surface ? m.surface : m.cardBg;
-  return `<rect x="0.5" y="0.5" width="${w - 1}" height="${h - 1}" rx="12" fill="${fill}" stroke="${m.border}"/>`;
-}
+const svgDoc = (w, h, defs, body) =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img">${defs || ""}${body}</svg>`;
+
+const frame = (m, w, h, surface) =>
+  `<rect x="0.5" y="0.5" width="${w - 1}" height="${h - 1}" rx="12" fill="${surface ? m.surface : m.cardBg}" stroke="${m.border}"/>`;
 
 function wrap(text, maxChars) {
   const words = text.split(" ");
@@ -87,15 +95,26 @@ function wrap(text, maxChars) {
   return lines;
 }
 
+// Stylish pill chips: leading dot + border (secondary) or solid accent (primary).
 function chips(items, x, y, maxW, m, theme) {
   const t = THEMES[theme];
+  const light = m === MODES.light;
   let cx = x, cy = y, out = "";
-  const padX = 9, h = 20, gap = 6, size = 11.5;
+  const h = 22, gap = 7, size = 11.5, rowGap = 8;
   for (const it of items) {
-    const w = approxWidth(it, size) + padX * 2;
-    if (cx + w > x + maxW) { cx = x; cy += h + gap; }
-    out += `<rect x="${cx.toFixed(1)}" y="${cy}" width="${w.toFixed(1)}" height="${h}" rx="6" fill="${t.base}" fill-opacity="${m === MODES.light ? 0.12 : 0.2}"/>`;
-    out += `<text x="${(cx + w / 2).toFixed(1)}" y="${cy + 14}" font-size="${size}" text-anchor="middle" fill="${m === MODES.light ? t.textLight : t.textDark}" font-family="ui-monospace, monospace">${esc(it)}</text>`;
+    const label = typeof it === "string" ? it : it.label;
+    const primary = typeof it === "object" && it.primary;
+    const w = 22 + approxWidth(label, size) + 12;
+    if (cx + w > x + maxW) { cx = x; cy += h + rowGap; }
+    if (primary) {
+      out += `<rect x="${cx.toFixed(1)}" y="${cy}" width="${w.toFixed(1)}" height="${h}" rx="11" fill="${t.base}"/>`;
+      out += `<circle cx="${cx + 13}" cy="${cy + h / 2}" r="3" fill="#ffffff" fill-opacity="0.9"/>`;
+      out += `<text x="${cx + 22}" y="${cy + 15}" font-size="${size}" fill="#ffffff" font-family="${MONO}">${esc(label)}</text>`;
+    } else {
+      out += `<rect x="${cx.toFixed(1)}" y="${cy}" width="${w.toFixed(1)}" height="${h}" rx="11" fill="${t.base}" fill-opacity="${light ? 0.1 : 0.18}" stroke="${t.base}" stroke-opacity="${light ? 0.35 : 0.45}"/>`;
+      out += `<circle cx="${cx + 13}" cy="${cy + h / 2}" r="3" fill="${t.base}"/>`;
+      out += `<text x="${cx + 22}" y="${cy + 15}" font-size="${size}" fill="${light ? t.textLight : t.textDark}" font-family="${MONO}">${esc(label)}</text>`;
+    }
     cx += w + gap;
   }
   return { svg: out, bottom: cy + h };
@@ -111,143 +130,152 @@ function star(cx, cy, r, fill) {
   return `<polygon points="${pts.trim()}" fill="${fill}"/>`;
 }
 
-function titleRow(card, m, x = 18, y = 30) {
-  const t = THEMES[card.accent];
-  let icon;
-  if (card.kanji) icon = `<text x="${x}" y="${y + 6}" font-size="22" fill="${t.base}" font-family="'Hiragino Sans','Noto Sans JP',sans-serif">${esc(card.kanji)}</text>`;
-  else icon = `<rect x="${x}" y="${y - 11}" width="14" height="14" rx="4" fill="${t.base}"/>`;
-  const tx = card.kanji ? x + 32 : x + 24;
-  let flag = "";
-  if (card.flagship) {
-    const fw = approxWidth("flagship", 11) + 18;
-    flag = `<rect x="${450 - 18 - fw}" y="${y - 13}" width="${fw}" height="18" rx="6" fill="${t.base}" fill-opacity="${m === MODES.light ? 0.14 : 0.22}"/><text x="${450 - 18 - fw / 2}" y="${y}" font-size="11" text-anchor="middle" fill="${m === MODES.light ? t.textLight : t.textDark}" font-family="ui-monospace, monospace">flagship</text>`;
+function claudeBurst(cx, cy, r) {
+  const n = 12;
+  let lines = "";
+  for (let i = 0; i < n; i++) {
+    const a = (Math.PI * 2 / n) * i - Math.PI / 2;
+    const ro = i % 2 === 0 ? r : r * 0.78;
+    const ri = r * 0.2;
+    lines += `<line x1="${(cx + ri * Math.cos(a)).toFixed(1)}" y1="${(cy + ri * Math.sin(a)).toFixed(1)}" x2="${(cx + ro * Math.cos(a)).toFixed(1)}" y2="${(cy + ro * Math.sin(a)).toFixed(1)}"/>`;
   }
-  return `${icon}<text x="${tx}" y="${y + 1}" font-size="15.5" font-weight="600" fill="${m.text}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(card.title)}</text>${flag}`;
+  return `<g stroke="${CLAUDE}" stroke-width="${(r * 0.19).toFixed(2)}" stroke-linecap="round">${lines}</g><circle cx="${cx}" cy="${cy}" r="${(r * 0.15).toFixed(2)}" fill="${CLAUDE}"/>`;
 }
 
-// ---- Card renderers -------------------------------------------------------
+function smoothPath(pts) {
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    const c1x = p1[0] + (p2[0] - p0[0]) / 6, c1y = p1[1] + (p2[1] - p0[1]) / 6;
+    const c2x = p2[0] - (p3[0] - p1[0]) / 6, c2y = p2[1] - (p3[1] - p1[1]) / 6;
+    d += `C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+  }
+  return d;
+}
+
+function titleRow(card, m, x = 18, y = 30) {
+  let icon, tx;
+  if (card.kanji) { icon = `<text x="${x}" y="${y + 6}" font-size="22" fill="${THEMES[card.accent].base}" font-family="'Hiragino Sans','Noto Sans JP',sans-serif">${esc(card.kanji)}</text>`; tx = x + 34; }
+  else if (card.icon) { icon = `<text x="${x}" y="${y + 7}" font-size="20">${card.icon}</text>`; tx = x + 32; }
+  else { icon = `<rect x="${x}" y="${y - 11}" width="14" height="14" rx="4" fill="${THEMES[card.accent].base}"/>`; tx = x + 24; }
+  let flag = "";
+  if (card.flagship) {
+    const t = THEMES[card.accent], fw = approxWidth("flagship", 11) + 18, light = m === MODES.light;
+    flag = `<rect x="${450 - 18 - fw}" y="${y - 13}" width="${fw}" height="18" rx="9" fill="${t.base}" fill-opacity="${light ? 0.14 : 0.22}"/><text x="${450 - 18 - fw / 2}" y="${y}" font-size="11" text-anchor="middle" fill="${light ? t.textLight : t.textDark}" font-family="${MONO}">flagship</text>`;
+  }
+  return `${icon}<text x="${tx}" y="${y + 1}" font-size="15.5" font-weight="600" fill="${m.text}" font-family="${SANS}">${esc(card.title)}</text>${flag}`;
+}
+
+// ---- Cards ----------------------------------------------------------------
 const W = 450, H = 200;
 
 function renderRepoCard(card, m) {
-  const blurb = wrap(card.blurb, 52).map((ln, i) => `<text x="18" y="${62 + i * 18}" font-size="12.5" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(ln)}</text>`).join("");
-  let spark = "";
-  let chipY = 112;
+  const blurb = wrap(card.blurb, 52).map((ln, i) => `<text x="18" y="${62 + i * 18}" font-size="12.5" fill="${m.sub}" font-family="${SANS}">${esc(ln)}</text>`).join("");
+  let defs = "", art = "", chipY = 112;
   if (card.sparkline) {
-    spark = `<polyline points="18,118 66,108 114,113 162,96 210,103 258,88 306,98 354,90 402,104 432,96" fill="none" stroke="${THEMES[card.accent].base}" stroke-width="1.6"/>`
-      + `<polyline points="18,132 66,128 114,135 162,124 210,131 258,120 306,126 354,118 402,128 432,122" fill="none" stroke="#5DCAA5" stroke-width="1.6"/>`;
-    chipY = 150;
+    const gid = `area-${card.id}-${m === MODES.light ? "l" : "d"}`;
+    const t = THEMES[card.accent].base;
+    const pts = [[18, 124], [78, 112], [138, 120], [198, 98], [258, 108], [318, 90], [378, 104], [432, 95]];
+    const line = smoothPath(pts);
+    defs = `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t}" stop-opacity="${m === MODES.light ? 0.32 : 0.4}"/><stop offset="1" stop-color="${t}" stop-opacity="0"/></linearGradient></defs>`;
+    art = `<path d="${line}L432,140L18,140Z" fill="url(#${gid})"/><path d="${line}" fill="none" stroke="${t}" stroke-width="2" stroke-linecap="round"/>`;
+    chipY = 152;
   }
-  const labels = card.repos.map((name) => {
+  if (card.mascot && mascotUri) {
+    art += `<g transform="translate(440,14) scale(-1,1)"><image href="${mascotUri}" width="62" height="62"/></g>`;
+  }
+  const items = card.repos.map((name) => {
     const r = repos.get(name);
-    return r && r.stars > 0 ? `${name} ★${r.stars}` : name;
+    const label = r && r.stars > 0 ? `${name} ★${r.stars}` : name;
+    return { label, primary: name === card.primary };
   });
-  const c = chips(labels, 18, chipY, W - 36, m, card.accent);
-  return svgDoc(W, H, m, `${frame(m, W, H)}${titleRow(card, m)}${blurb}${spark}${c.svg}`);
+  const c = chips(items, 18, chipY, W - 36, m, card.accent);
+  return svgDoc(W, H, defs, `${frame(m, W, H)}${art}${titleRow(card, m)}${blurb}${c.svg}`);
 }
 
 function renderAocCard(card, m) {
-  const blurb = wrap(card.blurb, 52).map((ln, i) => `<text x="18" y="${150 + i * 18}" font-size="12.5" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(ln)}</text>`).join("");
-  const n = card.years.length;
-  const slot = (W - 36) / n;
+  const blurb = wrap(card.blurb, 52).map((ln, i) => `<text x="18" y="${150 + i * 18}" font-size="12.5" fill="${m.sub}" font-family="${SANS}">${esc(ln)}</text>`).join("");
+  const n = card.years.length, slot = (W - 36) / n;
   let wall = "";
   card.years.forEach((y, i) => {
     const cx = 18 + slot * i + slot / 2;
     wall += star(cx, 78, 13, "#e3b341");
-    wall += star(cx, 78, 13, "none");
-    wall += `<text x="${cx}" y="108" font-size="11" text-anchor="middle" fill="${m.faint}" font-family="ui-monospace, monospace">'${String(y.year).slice(2)}</text>`;
-    wall += `<text x="${cx}" y="122" font-size="9.5" text-anchor="middle" fill="${m.faint}" font-family="ui-monospace, monospace">${y.lang}</text>`;
+    wall += `<text x="${cx.toFixed(1)}" y="108" font-size="11" text-anchor="middle" fill="${m.text}" font-family="${MONO}">${y.year}</text>`;
+    wall += `<text x="${cx.toFixed(1)}" y="121" font-size="9.5" text-anchor="middle" fill="${m.faint}" font-family="${MONO}">${esc(y.lang)}</text>`;
   });
-  const total = `<text x="${W - 18}" y="30" font-size="12" text-anchor="end" fill="${THEMES[card.accent].base}" font-family="ui-monospace, monospace">${n} years</text>`;
-  return svgDoc(W, H, m, `${frame(m, W, H)}${titleRow(card, m)}${total}${wall}${blurb}`);
+  const total = `<text x="${W - 18}" y="30" font-size="12" text-anchor="end" fill="${THEMES[card.accent].base}" font-family="${MONO}">${n} years</text>`;
+  return svgDoc(W, H, "", `${frame(m, W, H)}${titleRow(card, m)}${total}${wall}${blurb}`);
 }
 
 function renderHobbiesCard(card, m) {
-  const w = 912, h = 104;
-  const t = THEMES[card.accent];
-  const blurb = `<text x="${28 + approxWidth(card.title, 15.5) + 30}" y="42" font-size="12.5" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(card.blurb)}</text>`;
-  let cx = 28;
-  let row = "";
+  const w = 912, h = 104, t = THEMES[card.accent], light = m === MODES.light;
+  const blurb = `<text x="${28 + approxWidth(card.title, 15.5) + 30}" y="42" font-size="12.5" fill="${m.sub}" font-family="${SANS}">${esc(card.blurb)}</text>`;
+  let cx = 28, row = "";
   for (const it of card.items) {
-    const cw = approxWidth(it.label, 13) + 40;
-    row += `<rect x="${cx.toFixed(1)}" y="58" width="${cw.toFixed(1)}" height="34" rx="8" fill="${t.base}" fill-opacity="${m === MODES.light ? 0.1 : 0.18}"/>`;
+    const cw = approxWidth(it.label, 13) + 42;
+    row += `<rect x="${cx.toFixed(1)}" y="58" width="${cw.toFixed(1)}" height="34" rx="8" fill="${t.base}" fill-opacity="${light ? 0.1 : 0.18}" stroke="${t.base}" stroke-opacity="${light ? 0.25 : 0.35}"/>`;
     row += `<text x="${cx + 14}" y="80" font-size="15">${it.emoji || "•"}</text>`;
-    row += `<text x="${cx + 36}" y="79" font-size="12.5" fill="${m === MODES.light ? t.textLight : t.textDark}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(it.label)}</text>`;
+    row += `<text x="${cx + 36}" y="79" font-size="12.5" fill="${light ? t.textLight : t.textDark}" font-family="${SANS}">${esc(it.label)}</text>`;
     cx += cw + 10;
   }
-  return svgDoc(w, h, m, `${frame(m, w, h)}<rect x="28" y="22" width="14" height="14" rx="4" fill="${t.base}"/><text x="52" y="34" font-size="15.5" font-weight="600" fill="${m.text}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(card.title)}</text>${blurb}${row}`);
+  return svgDoc(w, h, "", `${frame(m, w, h)}<rect x="28" y="22" width="14" height="14" rx="4" fill="${t.base}"/><text x="52" y="34" font-size="15.5" font-weight="600" fill="${m.text}" font-family="${SANS}">${esc(card.title)}</text>${blurb}${row}`);
+}
+
+// Branched git-log motif, like a real `git log --graph`.
+function gitGraph(m, x0, y0, span) {
+  const lanes = [y0, y0 + 28, y0 + 56];
+  const cols = ["#378ADD", "#1D9E75", "#D85A30"];
+  const step = span / 8;
+  const X = (i) => x0 + i * step;
+  // [slot, lane]
+  const nodes = [[0, 0], [1, 0], [2, 1], [3, 1], [4, 0], [5, 2], [6, 2], [7, 0], [8, 0]];
+  // [from, to, color-lane] — straight where same lane, curved where it switches
+  const edges = [
+    [[0, 0], [1, 0], 0], [[1, 0], [4, 0], 0], [[4, 0], [7, 0], 0], [[7, 0], [8, 0], 0],
+    [[1, 0], [2, 1], 1], [[2, 1], [3, 1], 1], [[3, 1], [4, 0], 1],
+    [[4, 0], [5, 2], 2], [[5, 2], [6, 2], 2], [[6, 2], [7, 0], 2],
+  ];
+  let g = "";
+  for (const [[fi, fl], [ti, tl], cl] of edges) {
+    const x1 = X(fi), y1 = lanes[fl], x2 = X(ti), y2 = lanes[tl], dx = (x2 - x1) / 2;
+    g += `<path d="M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2},${y2}" fill="none" stroke="${cols[cl]}" stroke-width="2" opacity="0.9"/>`;
+  }
+  for (const [i, l] of nodes) g += `<circle cx="${X(i)}" cy="${lanes[l]}" r="5" fill="${cols[l]}" stroke="${m.surface}" stroke-width="2"/>`;
+  return g;
 }
 
 function renderHero(m) {
   const w = 912, h = 150;
-  const name = `<text x="28" y="50" font-size="26" font-weight="600" fill="${m.text}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(config.name)}</text>`;
-  const tag = `<text x="28" y="78" font-size="13.5" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(config.tagline)}</text>`;
-  const reading = config.nowReading
-    ? `<text x="28" y="120" font-size="12" fill="${m.faint}" font-family="ui-monospace, monospace">📗 now reading · ${esc(config.nowReading.title)} — ${esc(config.nowReading.author)}</text>`
-    : "";
-  // git-graph motif on the right
-  const cols = ["#378ADD", "#1D9E75", "#D85A30", "#7F77DD"];
-  const baseX = 612;
-  let graph = "";
-  const nodes = [
-    { x: 0, lane: 0 }, { x: 1, lane: 0 }, { x: 2, lane: 1 }, { x: 3, lane: 0 },
-    { x: 4, lane: 2 }, { x: 5, lane: 1 }, { x: 6, lane: 0 }, { x: 7, lane: 3 }, { x: 8, lane: 0 },
-  ];
-  const px = (n) => baseX + n.x * 32;
-  const py = (n) => 40 + n.lane * 24;
-  // edges along main lane + branch merges
-  for (let i = 1; i < nodes.length; i++) {
-    const a = nodes[i - 1], b = nodes[i];
-    graph += `<path d="M${px(a)},${py(a)} C${px(a) + 16},${py(a)} ${px(b) - 16},${py(b)} ${px(b)},${py(b)}" fill="none" stroke="${cols[b.lane]}" stroke-width="2" opacity="0.85"/>`;
-  }
-  for (const n of nodes) graph += `<circle cx="${px(n)}" cy="${py(n)}" r="5" fill="${cols[n.lane]}" stroke="${m.cardBg}" stroke-width="2"/>`;
-  graph += `<text x="${baseX}" y="140" font-size="10.5" fill="${m.faint}" font-family="ui-monospace, monospace">rendered with react-git-log</text>`;
-  // stats strip
-  const topLangs = stats.langs.slice(0, 4);
-  let lx = 28;
-  let langBar = "";
-  if (topLangs.length) {
-    langBar += `<text x="28" y="120" font-size="12" fill="${m.faint}" font-family="ui-monospace, monospace"></text>`;
-  }
-  return svgDoc(w, h, m, `${frame(m, w, h, { surface: true })}${name}${tag}${reading}${graph}`);
+  const name = `<text x="28" y="48" font-size="26" font-weight="600" fill="${m.text}" font-family="${SANS}">${esc(config.name)}</text>`;
+  const tagline = `<text x="28" y="78" font-size="13.5" font-family="${SANS}"><tspan fill="${m.sub}">${esc(config.taglinePrefix)}</tspan><tspan fill="${m.link}">${esc(config.taglineLink)}</tspan><tspan fill="${m.sub}">${esc(config.taglineSuffix)}</tspan></text>`;
+  const burst = claudeBurst(35, 108, 8);
+  const claude = `<text x="50" y="112" font-size="12" font-family="${SANS}"><tspan fill="${m.sub}">All-in on </tspan><tspan fill="${m.link}">Claude</tspan><tspan fill="${m.sub}"> for agentic dev — living the current best practices.</tspan></text>`;
+  const graph = gitGraph(m, 612, 44, 268);
+  return svgDoc(w, h, "", `${frame(m, w, h, true)}${name}${tagline}${burst}${claude}${graph}`);
 }
 
 function renderStatsStrip(m) {
-  const w = 912, h = 92;
-  const t = THEMES.gray;
+  const w = 912, h = 92, t = THEMES.gray;
   const stat = (x, value, label) =>
-    `<text x="${x}" y="42" font-size="24" font-weight="600" fill="${m.text}" font-family="-apple-system,'Segoe UI',sans-serif">${value}</text>`
-    + `<text x="${x}" y="62" font-size="11.5" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${label}</text>`;
-  let bars = "";
-  const barX = 360, barW = w - barX - 28, total = stats.totalLang;
-  let bx = barX;
+    `<text x="${x}" y="42" font-size="24" font-weight="600" fill="${m.text}" font-family="${SANS}">${value}</text>` +
+    `<text x="${x}" y="62" font-size="11.5" fill="${m.sub}" font-family="${SANS}">${label}</text>`;
+  let bars = "", bx = 360;
+  const barW = w - 360 - 28;
   for (const [lang, n] of stats.langs.slice(0, 6)) {
-    const seg = (n / total) * barW;
+    const seg = (n / stats.totalLang) * barW;
     bars += `<rect x="${bx.toFixed(1)}" y="34" width="${Math.max(seg - 2, 2).toFixed(1)}" height="10" rx="3" fill="${LANG_COLORS[lang] || t.base}"/>`;
     bx += seg;
   }
-  let legend = "";
-  let lx = barX;
-  for (const [lang, n] of stats.langs.slice(0, 4)) {
+  let legend = "", lx = 360;
+  for (const [lang] of stats.langs.slice(0, 4)) {
     legend += `<circle cx="${lx + 4}" cy="60" r="4" fill="${LANG_COLORS[lang] || t.base}"/>`;
-    legend += `<text x="${lx + 13}" y="64" font-size="11" fill="${m.sub}" font-family="-apple-system,'Segoe UI',sans-serif">${esc(lang)}</text>`;
+    legend += `<text x="${lx + 13}" y="64" font-size="11" fill="${m.sub}" font-family="${SANS}">${esc(lang)}</text>`;
     lx += approxWidth(lang, 11) + 34;
   }
-  return svgDoc(w, h, m, `${frame(m, w, h)}${stat(28, stats.repoCount, "public repos")}${stat(150, stats.totalStars, "total stars")}${bars}${legend}`);
-}
-
-function svgDoc(w, h, m, body) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img">${body}</svg>`;
+  return svgDoc(w, h, "", `${frame(m, w, h)}${stat(28, stats.repoCount, "public repos")}${stat(150, stats.totalStars, "total stars")}${bars}${legend}`);
 }
 
 // ---- Drive ----------------------------------------------------------------
-// attach emoji to hobby items
-for (const card of config.cards) {
-  if (card.kind === "hobbies") {
-    const map = { music: "🎸", barbell: "🏋️", book: "📖", ramen: "🍜" };
-    for (const it of card.items) it.emoji = map[it.icon] || "•";
-  }
-}
-
 const renderers = { repos: renderRepoCard, aoc: renderAocCard, hobbies: renderHobbiesCard };
 
 await mkdir(outDir, { recursive: true });

@@ -6,7 +6,9 @@
 
 <div align="center">
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/hero-dark.svg" /><img alt="Thomas Plumpton — Staff engineer @ Matillion" src="assets/cards/hero-light.svg" width="858" /></picture>
+<a href="https://github.com/TomPlum/react-git-log"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/hero-dark.svg" /><img alt="Thomas Plumpton — Staff engineer @ Matillion" src="assets/cards/hero-light.svg" width="858" /></picture></a>
+
+<sub>graph by <a href="https://github.com/TomPlum/react-git-log">react-git-log</a> · <a href="https://www.matillion.com/">Matillion</a> · powered by <a href="https://www.anthropic.com/claude-code">Claude</a></sub>
 
 <a href="https://github.com/TomPlum/learn-japanese"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/language-dark.svg" /><img alt="Language learning: learn-japanese, nyuusu, natomski, kanji-parser, japanese-keyboard" src="assets/cards/language-light.svg" width="420" /></picture></a> <a href="https://github.com/TomPlum?tab=repositories&q=advent-of-code"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/aoc-dark.svg" /><img alt="Advent of Code: seven years of enterprise-style Kotlin" src="assets/cards/aoc-light.svg" width="420" /></picture></a>
 

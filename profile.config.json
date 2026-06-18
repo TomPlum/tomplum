@@ -1,15 +1,10 @@
 {
   "githubUser": "TomPlum",
   "name": "Thomas Plumpton",
-  "tagline": "Staff engineer @ Matillion · Kotlin · Spring · React · 学習中",
-  "wakatime": {
-    "enabled": true,
-    "username": "TomPlum"
-  },
-  "nowReading": {
-    "title": "Head First Design Patterns",
-    "author": "Freeman & Robson"
-  },
+  "taglinePrefix": "Staff engineer @ ",
+  "taglineLink": "Matillion",
+  "taglineSuffix": " · Kotlin · Spring · React · 学習中",
+  "claudeLine": "All-in on Claude for agentic dev — living the current best practices.",
   "cards": [
     {
       "id": "language",
@@ -17,14 +12,16 @@
       "title": "Language learning",
       "accent": "pink",
       "kanji": "語",
+      "mascot": true,
       "blurb": "Apps for the languages I'm actually studying — Japanese & Polish.",
-      "repos": ["learn-japanese", "nyuusu", "natomski", "kanji-parser", "japanese-keyboard"]
+      "repos": ["learn-japanese", "nyuusu", "natomski", "kanji-parser"]
     },
     {
       "id": "aoc",
       "kind": "aoc",
       "title": "Advent of Code",
       "accent": "green",
+      "icon": "🎄",
       "blurb": "Enterprise-style Kotlin. Tests, design, the lot — every year.",
       "years": [
         { "year": 2018, "lang": "py" },
@@ -41,6 +38,7 @@
       "kind": "repos",
       "title": "Data visualisation",
       "accent": "blue",
+      "icon": "📊",
       "sparkline": true,
       "blurb": "Quantified-self dashboards from my own sleep & activity data.",
       "repos": ["sleep", "activity-trends", "clocks"]
@@ -50,7 +48,9 @@
       "kind": "repos",
       "title": "React & open source",
       "accent": "purple",
+      "icon": "⚛️",
       "flagship": true,
+      "primary": "react-git-log",
       "blurb": "A themable, paginated React component for visualising Git history.",
       "repos": ["react-git-log", "domain-driven-design-template"]
     },
@@ -61,10 +61,11 @@
       "accent": "amber",
       "blurb": "When the laptop is shut.",
       "items": [
-        { "icon": "music", "label": "Guitar" },
-        { "icon": "barbell", "label": "Gym · gym-bro" },
-        { "icon": "book", "label": "Fantasy fiction" },
-        { "icon": "ramen", "label": "Food" }
+        { "emoji": "📖", "label": "Fantasy fiction" },
+        { "emoji": "🏋️", "label": "Gym & Fitness" },
+        { "emoji": "🗾", "label": "Language learning" },
+        { "emoji": "🎸", "label": "Guitar" },
+        { "emoji": "🍜", "label": "Food" }
       ]
     }
   ]

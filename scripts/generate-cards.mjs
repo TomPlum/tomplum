@@ -182,7 +182,7 @@ function renderRepoCard(card, m) {
     chipY = 152;
   }
   if (card.mascot && mascotUri) {
-    art += `<g transform="translate(440,14) scale(-1,1)"><image href="${mascotUri}" width="62" height="62"/></g>`;
+    art += `<g transform="translate(440,12) scale(-1,1)"><image href="${mascotUri}" width="74" height="74"/></g>`;
   }
   const items = card.repos.map((name) => {
     const r = repos.get(name);

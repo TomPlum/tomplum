@@ -156,7 +156,7 @@ function smoothPath(pts) {
 function titleRow(card, m, x = 18, y = 30) {
   let icon, tx;
   if (card.kanji) { icon = `<text x="${x}" y="${y + 6}" font-size="22" fill="${THEMES[card.accent].base}" font-family="'Hiragino Sans','Noto Sans JP',sans-serif">${esc(card.kanji)}</text>`; tx = x + 34; }
-  else if (card.icon) { icon = `<text x="${x}" y="${y + 7}" font-size="20">${card.icon}</text>`; tx = x + 32; }
+  else if (card.icon) { icon = `<text x="${x}" y="${y + 3}" font-size="20">${card.icon}</text>`; tx = x + 32; }
   else { icon = `<rect x="${x}" y="${y - 11}" width="14" height="14" rx="4" fill="${THEMES[card.accent].base}"/>`; tx = x + 24; }
   let flag = "";
   if (card.flagship) {

@@ -1,26 +1,73 @@
+<!--
+  This README is generated. Edit profile.config.json (content) or
+  scripts/generate-cards.mjs (design), then run: node scripts/generate-cards.mjs
+  A GitHub Action regenerates the cards on a schedule so the live stats stay fresh.
+-->
 
-<!-- <p align="left"> <img src="https://komarev.com/ghpvc/?username=tomplum&label=Profile%20views&color=0e75b6&style=flat" alt="tomplum" /> </p> -->
+<table border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2" align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/cards/hero-dark.svg" />
+        <img alt="Thomas Plumpton — Staff engineer @ Matillion" src="assets/cards/hero-light.svg" width="100%" />
+      </picture>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://github.com/TomPlum/learn-japanese">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="assets/cards/language-dark.svg" />
+          <img alt="Language learning: learn-japanese, nyuusu, natomski, kanji-parser, japanese-keyboard" src="assets/cards/language-light.svg" width="100%" />
+        </picture>
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://github.com/TomPlum?tab=repositories&q=advent-of-code">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="assets/cards/aoc-dark.svg" />
+          <img alt="Advent of Code: seven years of enterprise-style Kotlin" src="assets/cards/aoc-light.svg" width="100%" />
+        </picture>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <a href="https://github.com/TomPlum/sleep">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="assets/cards/dataviz-dark.svg" />
+          <img alt="Data visualisation: sleep, activity-trends, clocks" src="assets/cards/dataviz-light.svg" width="100%" />
+        </picture>
+      </a>
+    </td>
+    <td align="center" width="50%">
+      <a href="https://github.com/TomPlum/react-git-log">
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="assets/cards/react-dark.svg" />
+          <img alt="React and open source: react-git-log, domain-driven-design-template" src="assets/cards/react-light.svg" width="100%" />
+        </picture>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/cards/beyond-dark.svg" />
+        <img alt="Beyond the editor: guitar, gym, fantasy fiction, food" src="assets/cards/beyond-light.svg" width="100%" />
+      </picture>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="assets/cards/stats-dark.svg" />
+        <img alt="Public repos, total stars and top languages" src="assets/cards/stats-light.svg" width="100%" />
+      </picture>
+    </td>
+  </tr>
+</table>
 
-<!-- <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=tomplum" alt="tomplum" /></a> </p> -->
-
-🔭 I’m currently working on [react-git-log](https://github.com/TomPlum/react-git-log), a flexible, themable and paginated React component for visualising Git commit history and metadata.
-
-:jp: I’m also working on [Nyusu](https://github.com/TomPlum/nyuusu), a small personal project for practing your Japanese reading skills via news articles and headlines.
-
-📗 I'm currently reading [Head First Design Patterns](https://www.oreilly.com/library/view/head-first-design/0596007124/) by Eric Freeman & Elisabeth Robson.
-
-<!--<a>
-    <img 
-        align="left"
-        src="https://github-readme-stats.vercel.app/api?username=tomplum&show_icons=true&theme=dark&locale=en&hide=prs,contribs&include_all_commits=true&count_private=true&custom_title=Tom's GitHub Stats&card_width=300"
-        alt="tomplum" 
-    />
-</a> -->
-
-<!--<a>
-    <img 
-        align="left"
-        src="https://github-readme-stats.vercel.app/api/top-langs?username=tomplum&theme=dark&show_icons=true&locale=en&layout=compact&langs_count=6"
-        alt="tomplum" 
-    />
-</a>-->
+<p align="center">
+  <a href="https://tomplumpton.me">Portfolio</a> ·
+  <a href="https://github.com/TomPlum?tab=repositories">All repositories</a>
+</p>

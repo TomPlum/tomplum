@@ -1,0 +1,71 @@
+{
+  "githubUser": "TomPlum",
+  "name": "Thomas Plumpton",
+  "tagline": "Staff engineer @ Matillion · Kotlin · Spring · React · 学習中",
+  "wakatime": {
+    "enabled": true,
+    "username": "TomPlum"
+  },
+  "nowReading": {
+    "title": "Head First Design Patterns",
+    "author": "Freeman & Robson"
+  },
+  "cards": [
+    {
+      "id": "language",
+      "kind": "repos",
+      "title": "Language learning",
+      "accent": "pink",
+      "kanji": "語",
+      "blurb": "Apps for the languages I'm actually studying — Japanese & Polish.",
+      "repos": ["learn-japanese", "nyuusu", "natomski", "kanji-parser", "japanese-keyboard"]
+    },
+    {
+      "id": "aoc",
+      "kind": "aoc",
+      "title": "Advent of Code",
+      "accent": "green",
+      "blurb": "Enterprise-style Kotlin. Tests, design, the lot — every year.",
+      "years": [
+        { "year": 2018, "lang": "py" },
+        { "year": 2019, "lang": "kt" },
+        { "year": 2020, "lang": "kt" },
+        { "year": 2021, "lang": "kt" },
+        { "year": 2022, "lang": "kt" },
+        { "year": 2023, "lang": "kt" },
+        { "year": 2024, "lang": "kt" }
+      ]
+    },
+    {
+      "id": "dataviz",
+      "kind": "repos",
+      "title": "Data visualisation",
+      "accent": "blue",
+      "sparkline": true,
+      "blurb": "Quantified-self dashboards from my own sleep & activity data.",
+      "repos": ["sleep", "activity-trends", "clocks"]
+    },
+    {
+      "id": "react",
+      "kind": "repos",
+      "title": "React & open source",
+      "accent": "purple",
+      "flagship": true,
+      "blurb": "A themable, paginated React component for visualising Git history.",
+      "repos": ["react-git-log", "domain-driven-design-template"]
+    },
+    {
+      "id": "beyond",
+      "kind": "hobbies",
+      "title": "Beyond the editor",
+      "accent": "amber",
+      "blurb": "When the laptop is shut.",
+      "items": [
+        { "icon": "music", "label": "Guitar" },
+        { "icon": "barbell", "label": "Gym · gym-bro" },
+        { "icon": "book", "label": "Fantasy fiction" },
+        { "icon": "ramen", "label": "Food" }
+      ]
+    }
+  ]
+}

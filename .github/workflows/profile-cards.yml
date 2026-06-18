@@ -1,0 +1,47 @@
+name: Profile cards
+
+on:
+  schedule:
+    # Refresh the live stats every day at 06:00 UTC
+    - cron: "0 6 * * *"
+  push:
+    branches: [main]
+    paths:
+      - profile.config.json
+      - scripts/generate-cards.mjs
+      - .github/workflows/profile-cards.yml
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/generate-cards.mjs
+
+      - name: Commit refreshed cards
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain assets/cards)" ]; then
+            git add assets/cards
+            git commit -m "chore: refresh profile cards"
+            git push
+          else
+            echo "No card changes."
+          fi

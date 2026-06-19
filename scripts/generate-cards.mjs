@@ -101,19 +101,23 @@ function chips(items, x, y, maxW, m, theme) {
   const light = m === MODES.light;
   let cx = x, cy = y, out = "";
   const h = 22, gap = 7, size = 11.5, rowGap = 8;
+  // Symmetric horizontal padding, consistent dot→text gap.
+  const padX = 11, dotR = 3, dotGap = 7;
+  const textDx = padX + dotR * 2 + dotGap;
   for (const it of items) {
     const label = typeof it === "string" ? it : it.label;
     const primary = typeof it === "object" && it.primary;
-    const w = 22 + approxWidth(label, size) + 12;
+    const w = textDx + approxWidth(label, size) + padX;
     if (cx + w > x + maxW) { cx = x; cy += h + rowGap; }
+    const dotCx = cx + padX + dotR, textX = cx + textDx, ty = cy + h / 2 + 4;
     if (primary) {
       out += `<rect x="${cx.toFixed(1)}" y="${cy}" width="${w.toFixed(1)}" height="${h}" rx="11" fill="${t.base}"/>`;
-      out += `<circle cx="${cx + 13}" cy="${cy + h / 2}" r="3" fill="#ffffff" fill-opacity="0.9"/>`;
-      out += `<text x="${cx + 22}" y="${cy + 15}" font-size="${size}" fill="#ffffff" font-family="${MONO}">${esc(label)}</text>`;
+      out += `<circle cx="${dotCx}" cy="${cy + h / 2}" r="${dotR}" fill="#ffffff" fill-opacity="0.9"/>`;
+      out += `<text x="${textX}" y="${ty}" font-size="${size}" fill="#ffffff" font-family="${MONO}">${esc(label)}</text>`;
     } else {
       out += `<rect x="${cx.toFixed(1)}" y="${cy}" width="${w.toFixed(1)}" height="${h}" rx="11" fill="${t.base}" fill-opacity="${light ? 0.1 : 0.18}" stroke="${t.base}" stroke-opacity="${light ? 0.35 : 0.45}"/>`;
-      out += `<circle cx="${cx + 13}" cy="${cy + h / 2}" r="3" fill="${t.base}"/>`;
-      out += `<text x="${cx + 22}" y="${cy + 15}" font-size="${size}" fill="${light ? t.textLight : t.textDark}" font-family="${MONO}">${esc(label)}</text>`;
+      out += `<circle cx="${dotCx}" cy="${cy + h / 2}" r="${dotR}" fill="${t.base}"/>`;
+      out += `<text x="${textX}" y="${ty}" font-size="${size}" fill="${light ? t.textLight : t.textDark}" font-family="${MONO}">${esc(label)}</text>`;
     }
     cx += w + gap;
   }
@@ -209,13 +213,18 @@ function renderAocCard(card, m) {
 
 function renderHobbiesCard(card, m) {
   const w = 912, h = 104, t = THEMES[card.accent], light = m === MODES.light;
-  const blurb = `<text x="${28 + approxWidth(card.title, 15.5) + 30}" y="42" font-size="12.5" fill="${m.sub}" font-family="${SANS}">${esc(card.blurb)}</text>`;
+  const blurb = card.blurb
+    ? `<text x="${28 + approxWidth(card.title, 15.5) + 30}" y="42" font-size="12.5" fill="${m.sub}" font-family="${SANS}">${esc(card.blurb)}</text>`
+    : "";
+  // Even side padding + a fixed emoji slot so the icon→label gap is identical across pills.
+  const padX = 14, emojiSlot = 20, emojiGap = 6;
+  const textDx = padX + emojiSlot + emojiGap;
   let cx = 28, row = "";
   for (const it of card.items) {
-    const cw = approxWidth(it.label, 13) + 42;
+    const cw = textDx + approxWidth(it.label, 13) + padX;
     row += `<rect x="${cx.toFixed(1)}" y="58" width="${cw.toFixed(1)}" height="34" rx="8" fill="${t.base}" fill-opacity="${light ? 0.1 : 0.18}" stroke="${t.base}" stroke-opacity="${light ? 0.25 : 0.35}"/>`;
-    row += `<text x="${cx + 14}" y="80" font-size="15">${it.emoji || "•"}</text>`;
-    row += `<text x="${cx + 36}" y="79" font-size="12.5" fill="${light ? t.textLight : t.textDark}" font-family="${SANS}">${esc(it.label)}</text>`;
+    row += `<text x="${cx + padX + emojiSlot / 2}" y="80" font-size="15" text-anchor="middle">${it.emoji || "•"}</text>`;
+    row += `<text x="${cx + textDx}" y="79" font-size="12.5" fill="${light ? t.textLight : t.textDark}" font-family="${SANS}">${esc(it.label)}</text>`;
     cx += cw + 10;
   }
   return svgDoc(w, h, "", `${frame(m, w, h)}<rect x="28" y="22" width="14" height="14" rx="4" fill="${t.base}"/><text x="52" y="34" font-size="15.5" font-weight="600" fill="${m.text}" font-family="${SANS}">${esc(card.title)}</text>${blurb}${row}`);

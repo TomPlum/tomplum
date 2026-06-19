@@ -59,13 +59,13 @@
       "kind": "hobbies",
       "title": "Beyond the editor",
       "accent": "amber",
-      "blurb": "When the laptop is shut.",
+      "blurb": "",
       "items": [
         { "emoji": "📖", "label": "Fantasy fiction" },
         { "emoji": "🏋️", "label": "Gym & Fitness" },
-        { "emoji": "🗾", "label": "Language learning" },
+        { "emoji": "🇵🇱", "label": "Language learning" },
         { "emoji": "🎸", "label": "Guitar" },
-        { "emoji": "🍜", "label": "Food" }
+        { "emoji": "🖥️", "label": "PC building" }
       ]
     }
   ]

@@ -12,7 +12,7 @@
 
 <a href="https://github.com/TomPlum/sleep"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/dataviz-dark.svg" /><img alt="Data visualisation: sleep, activity-trends, clocks" src="assets/cards/dataviz-light.svg" width="420" /></picture></a> <a href="https://github.com/TomPlum/react-git-log"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/react-dark.svg" /><img alt="React and open source: react-git-log, domain-driven-design-template" src="assets/cards/react-light.svg" width="420" /></picture></a>
 
-<picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/beyond-dark.svg" /><img alt="Beyond the editor: guitar, gym, fantasy fiction, food" src="assets/cards/beyond-light.svg" width="858" /></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/beyond-dark.svg" /><img alt="Beyond the editor: fantasy fiction, gym, language learning, guitar, PC building" src="assets/cards/beyond-light.svg" width="858" /></picture>
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/stats-dark.svg" /><img alt="Public repos, total stars and top languages" src="assets/cards/stats-light.svg" width="858" /></picture>
 

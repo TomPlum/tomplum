@@ -16,6 +16,6 @@
 
 <picture><source media="(prefers-color-scheme: dark)" srcset="assets/cards/stats-dark.svg" /><img alt="Public repos, total stars and top languages" src="assets/cards/stats-light.svg" width="858" /></picture>
 
-<p><a href="https://tomplumpton.me">Portfolio</a> · <a href="https://github.com/TomPlum?tab=repositories">All repositories</a></p>
+<p><a href="https://tomplumpton.me">Portfolio</a> · <a href="https://github.com/TomPlum?tab=repositories">All repositories</a> · <a href="https://www.goodreads.com/user/show/185375560-tom-plumpton">Goodreads</a> · <a href="https://www.maia.ai/">Maia</a></p>
 
 </div>
